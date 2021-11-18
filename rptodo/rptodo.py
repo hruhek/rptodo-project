@@ -55,8 +55,13 @@ class Todoer:
         if read.error:
             return CurrentTodo({}, read.error)
         try:
-            todo = read.todo_list.pop(todo_id-1)
+            todo = read.todo_list.pop(todo_id - 1)
         except IndexError:
             return CurrentTodo({}, ID_ERROR)
         write = self._db_handler.write_todos(read.todo_list)
         return CurrentTodo(todo, write.error)
+
+    def remove_all(self) -> CurrentTodo:
+        """Remove all to-dos from the database."""
+        write = self._db_handler.write_todos([])
+        return CurrentTodo({}, write.error)
