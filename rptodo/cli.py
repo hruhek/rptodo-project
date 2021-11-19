@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from typing import Optional, List
 
@@ -20,17 +21,11 @@ def init(
     """Initialize the to-do database"""
     app_init_error = config.init_app(db_path)
     if app_init_error:
-        typer.secho(
-            f'Creating config file failed with "{ERRORS[app_init_error]}"',
-            fg=typer.colors.RED,
-        )
+        typer.secho(f'Creating config file failed with "{ERRORS[app_init_error]}"', fg=typer.colors.RED)
         raise typer.Exit(1)
     db_init_error = database.init_database(Path(db_path))
     if db_init_error:
-        typer.secho(
-            f'Creating database failed with "{ERRORS[db_init_error]}"',
-            fg=typer.colors.RED,
-        )
+        typer.secho(f'Creating database failed with "{ERRORS[db_init_error]}"', fg=typer.colors.RED)
         raise typer.Exit(1)
     else:
         typer.secho(f'The to-do database is {db_path}', fg=typer.colors.GREEN)
@@ -40,18 +35,12 @@ def get_todoer() -> rptodo.Todoer:
     if config.CONFIG_FILE_PATH.exists():
         db_path = database.get_database_path(config.CONFIG_FILE_PATH)
     else:
-        typer.secho(
-            'Config file not found. Please, run "rptodo init"',
-            fg=typer.colors.RED
-        )
+        typer.secho('Config file not found. Please, run "rptodo init"', fg=typer.colors.RED)
         raise typer.Exit(1)
     if db_path.exists():
         return rptodo.Todoer(db_path)
     else:
-        typer.secho(
-            'Database not found. Please, run "rptodo init"',
-            fg=typer.colors.RED
-        )
+        typer.secho('Database not found. Please, run "rptodo init"', fg=typer.colors.RED)
         raise typer.Exit(1)
 
 
@@ -64,15 +53,10 @@ def add(
     todoer = get_todoer()
     todo, error = todoer.add(description, priority)
     if error:
-        typer.secho(
-            f'Adding to-do failed with "{ERRORS[error]}"', fg=typer.colors.RED
-        )
+        typer.secho(f'Adding to-do failed with "{ERRORS[error]}"', fg=typer.colors.RED)
         raise typer.Exit(1)
     else:
-        typer.secho(
-            f"""to-do: "{todo['Description']}" was added  with priority: {priority}""",
-            fg=typer.colors.GREEN,
-        )
+        typer.secho(f"""to-do: "{todo['Description']}" was added  with priority: {priority}""", fg=typer.colors.GREEN)
 
 
 @app.command(name='list')
@@ -81,9 +65,7 @@ def list_all() -> None:
     todoer = get_todoer()
     todo_list = todoer.get_todo_list()
     if len(todo_list) == 0:
-        typer.secho(
-            'There are no task in the to-do list yet', fg=typer.colors.RED
-        )
+        typer.secho('There are no task in the to-do list yet', fg=typer.colors.RED)
         raise typer.Exit()
     typer.secho('\nto-do list:\n', fg=typer.colors.BLUE, bold=True)
     columns = (
@@ -113,15 +95,9 @@ def set_done(todo_id: int = typer.Argument(...)) -> None:
     todoer = get_todoer()
     todo, error = todoer.set_done(todo_id)
     if error:
-        typer.secho(
-            f'Completing to-do # "{todo_id}" failed with "{ERRORS[error]}"',
-            fg=typer.colors.RED,
-        )
+        typer.secho(f'Completing to-do # "{todo_id}" failed with "{ERRORS[error]}"', fg=typer.colors.RED)
     else:
-        typer.secho(
-            f"""to-do # {todo_id} "{todo['Description']}" completed!""",
-            fg=typer.colors.GREEN
-        )
+        typer.secho(f"""to-do # {todo_id} "{todo['Description']}" completed!""", fg=typer.colors.GREEN)
 
 
 @app.command()
@@ -140,15 +116,9 @@ def remove(
     def _remove():
         todo, error = todoer.remove(todo_id)
         if error:
-            typer.secho(
-                f'Removing to-do # {todo_id} failed with "{ERRORS[error]}"',
-                fg=typer.colors.RED
-            )
+            typer.secho(f'Removing to-do # {todo_id} failed with "{ERRORS[error]}"', fg=typer.colors.RED)
         else:
-            typer.secho(
-                f"""to-do # {todo_id}: '{todo["Description"]}' was removed""",
-                fg=typer.colors.GREEN,
-            )
+            typer.secho(f"""to-do # {todo_id}: '{todo["Description"]}' was removed""", fg=typer.colors.GREEN)
 
     if force:
         _remove()
@@ -181,10 +151,7 @@ def remove_all(
     if force:
         error = todoer.remove_all().error
         if error:
-            typer.secho(
-                f'Removing to-dos failed with "{ERRORS[error]}"',
-                fg=typer.colors.RED
-            )
+            typer.secho(f'Removing to-dos failed with "{ERRORS[error]}"', fg=typer.colors.RED)
             raise typer.Exit(1)
         else:
             typer.secho('All to-dos were removed', fg=typer.colors.GREEN)
