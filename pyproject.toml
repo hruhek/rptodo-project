@@ -1,8 +1,11 @@
 [tool.poetry]
-name = "rptodo-project"
+name = "rptodo"
 version = "0.1.0"
 description = ""
 authors = ["Hrvoje Ruhek <trulija@gmail.com>"]
+
+[tool.poetry.scripts]
+rptodo = "rptodo.cli:app"
 
 [tool.poetry.dependencies]
 python = "^3.8"

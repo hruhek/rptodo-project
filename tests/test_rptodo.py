@@ -3,7 +3,7 @@ import json
 import pytest
 from typer.testing import CliRunner
 
-from rptodo import cli, __app_name__, __version__, SUCCESS, rptodo, DB_READ_ERROR
+from rptodo import cli, __app_name__, __version__, SUCCESS, rptodo
 
 runner = CliRunner()
 
