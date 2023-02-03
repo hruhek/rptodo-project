@@ -17,12 +17,12 @@ class Todoer:
     def add(self, description: List[str], priority: int = 2) -> CurrentTodo:
         """Add a new to-do to the database."""
         description_text = " ".join(description)
-        if not description_text.endswith('.'):
-            description_text += '.'
+        if not description_text.endswith("."):
+            description_text += "."
         todo = {
-            'Description': description_text,
-            'Priority': priority,
-            'Done': False,
+            "Description": description_text,
+            "Priority": priority,
+            "Done": False,
         }
         read = self._db_handler.read_todos()
         if read.error == DB_READ_ERROR:
@@ -45,7 +45,7 @@ class Todoer:
             todo = read.todo_list[todo_id - 1]
         except IndexError:
             return CurrentTodo({}, ID_ERROR)
-        todo['Done'] = True
+        todo["Done"] = True
         write = self._db_handler.write_todos(read.todo_list)
         return CurrentTodo(todo, write.error)
 
